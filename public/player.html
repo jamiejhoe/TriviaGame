@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>TriviaBlast – Play</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="screen-join" class="screen active">
+    <div class="logo">🎮 TriviaBlast</div>
+    <div class="form-card">
+      <div class="form-group">
+        <label>Game Code</label>
+        <input type="text" id="code-input" placeholder="e.g. AB12C" maxlength="5"
+               style="text-transform:uppercase;letter-spacing:4px;font-size:1.4rem;text-align:center" />
+      </div>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="name-input" placeholder="Enter your name" maxlength="20" />
+      </div>
+      <p class="error-msg hidden" id="error-msg"></p>
+      <button class="btn btn-primary" onclick="joinGame()">Join Game</button>
+    </div>
+  </div>
+
+  <div id="screen-waiting" class="screen">
+    <div class="logo small">🎮</div>
+    <div class="waiting-name" id="waiting-name">Player</div>
+    <div class="waiting-msg">Get ready! The host will start soon...</div>
+    <div class="pulse-ring"></div>
+  </div>
+
+  <div id="screen-question" class="screen">
+    <div class="player-header">
+      <div class="timer-wrap">
+        <svg class="timer-ring" viewBox="0 0 60 60">
+          <circle class="timer-bg" cx="30" cy="30" r="26"/>
+          <circle class="timer-progress" id="p-timer-circle" cx="30" cy="30" r="26"/>
+        </svg>
+        <span class="timer-text" id="p-timer-text">20</span>
+      </div>
+      <div class="player-score">⭐ <span id="p-score">0</span></div>
+    </div>
+
+    <div class="question-box player-question-box">
+      <p id="p-question-text">Loading...</p>
+    </div>
+
+    <div class="answers-grid" id="p-answers-grid"></div>
+  </div>
+
+  <div id="screen-feedback" class="screen">
+    <div class="feedback-icon" id="p-feedback-icon">✅</div>
+    <div class="feedback-msg" id="p-feedback-msg">Correct!</div>
+    <div class="feedback-points" id="p-feedback-points">+850 points</div>
+    <div class="waiting-msg" style="margin-top:24px">Waiting for next question...</div>
+  </div>
+
+  <div id="screen-lb" class="screen">
+    <div class="reveal-title">📊 Leaderboard</div>
+    <div class="leaderboard" id="p-leaderboard"></div>
+    <div class="waiting-msg">Next question coming up...</div>
+  </div>
+
+  <div id="screen-end" class="screen">
+    <div class="results-title">🏆 Game Over!</div>
+    <div class="leaderboard" id="p-final-leaderboard"></div>
+    <button class="btn btn-primary" onclick="location.reload()">Play Again</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="player.js"></script>
+</body>
+</html>
