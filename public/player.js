@@ -42,6 +42,31 @@ socket.on("player:joined", ({ name }) => {
   showScreen("screen-waiting");
 });
 
+// Late join - player joined after game started
+socket.on("player:joined_late", ({ name, currentQ, total }) => {
+  score = 0;
+  document.getElementById("waiting-name").textContent = name;
+  document.getElementById("waiting-msg").innerHTML = 
+    `You joined mid-game!<br>Question ${currentQ} of ${total}`;
+  showScreen("screen-waiting");
+});
+
+// Rejoin - player reconnected and recovered their score
+socket.on("player:rejoined", ({ name, score: savedScore, phase, currentQ, total }) => {
+  score = savedScore;
+  document.getElementById("waiting-name").textContent = name;
+  document.getElementById("waiting-msg").innerHTML = 
+    `Welcome back! 🎉<br>Score: ${savedScore} points`;
+  document.getElementById("p-score").textContent = score;
+  showScreen("screen-waiting");
+});
+
+// Waiting state when rejoined but already answered current question
+socket.on("player:wait_for_next", ({ message }) => {
+  document.getElementById("waiting-msg").textContent = message;
+  showScreen("screen-waiting");
+});
+
 socket.on("player:error", (msg) => showError(msg));
 
 socket.on("player:question", ({ question, answers, time }) => {

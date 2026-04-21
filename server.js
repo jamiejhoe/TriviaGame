@@ -48,8 +48,17 @@ function generateCode() {
 
 function getLeaderboard(room) {
   return Object.values(room.players)
+    .filter(p => p.connected) // Only show connected players
     .map(p => ({ name: p.name, score: p.score }))
     .sort((a, b) => b.score - a.score);
+}
+
+function getConnectedPlayers(room) {
+  return Object.values(room.players).filter(p => p.connected);
+}
+
+function findPlayerByName(room, name) {
+  return Object.entries(room.players).find(([_, p]) => p.name.toLowerCase() === name.toLowerCase());
 }
 
 // ── Socket Events ──────────────────────────────────────────────────────────
@@ -99,20 +108,113 @@ io.on("connection", (socket) => {
   socket.on("player:join", ({ code, name }) => {
     const room = rooms[code];
     if (!room) return socket.emit("player:error", "Room not found.");
-    if (room.phase !== "lobby") return socket.emit("player:error", "Game already started.");
-    if (Object.keys(room.players).length >= 50) return socket.emit("player:error", "Room is full.");
+    if (room.phase === "ended") return socket.emit("player:error", "Game has ended.");
 
     const trimmed = name.trim().substring(0, 20);
     if (!trimmed) return socket.emit("player:error", "Enter a valid name.");
 
-    room.players[socket.id] = { name: trimmed, score: 0, answered: false };
-    socket.join(code);
-    socket.data.code = code;
-    socket.data.name = trimmed;
+    // Check if this is a rejoin (same name, disconnected player)
+    const existingPlayer = findPlayerByName(room, trimmed);
+    
+    if (existingPlayer) {
+      const [oldSocketId, player] = existingPlayer;
+      
+      if (player.connected) {
+        return socket.emit("player:error", "Name already taken.");
+      }
+      
+      // Rejoin: transfer player data to new socket
+      delete room.players[oldSocketId];
+      room.players[socket.id] = player;
+      player.connected = true;
+      player.socketId = socket.id;
+      
+      socket.join(code);
+      socket.data.code = code;
+      socket.data.name = player.name;
 
-    socket.emit("player:joined", { name: trimmed });
+      // Send rejoin confirmation with current score
+      socket.emit("player:rejoined", { 
+        name: player.name, 
+        score: player.score,
+        phase: room.phase,
+        currentQ: room.currentQ,
+        total: room.questions.length
+      });
+
+      // If game is in progress, send current question state
+      if (room.phase === "playing" && !player.answered) {
+        const q = room.questions[room.currentQ];
+        socket.emit("player:question", {
+          question: q.text,
+          answers: q.answers,
+          time: q.time,
+          index: room.currentQ,
+          total: room.questions.length,
+          lateJoin: true // Signal reduced time
+        });
+      } else if (room.phase === "playing" && player.answered) {
+        socket.emit("player:wait_for_next", { message: "You already answered this question. Waiting for results..." });
+      }
+
+      console.log(`♻️  ${player.name} rejoined room ${code}`);
+    } else {
+      // New player joining
+      if (Object.keys(room.players).length >= 50) {
+        return socket.emit("player:error", "Room is full.");
+      }
+
+      // Check for duplicate name among connected players
+      const nameTaken = Object.values(room.players).some(
+        p => p.connected && p.name.toLowerCase() === trimmed.toLowerCase()
+      );
+      if (nameTaken) {
+        return socket.emit("player:error", "Name already taken.");
+      }
+
+      room.players[socket.id] = { 
+        name: trimmed, 
+        score: 0, 
+        answered: false, 
+        connected: true,
+        socketId: socket.id,
+        joinedAt: room.currentQ // Track when they joined for fair scoring
+      };
+      
+      socket.join(code);
+      socket.data.code = code;
+      socket.data.name = trimmed;
+
+      if (room.phase === "lobby") {
+        socket.emit("player:joined", { name: trimmed });
+      } else {
+        // Late join during game
+        socket.emit("player:joined_late", { 
+          name: trimmed,
+          currentQ: room.currentQ + 1,
+          total: room.questions.length
+        });
+
+        // Send current question if in playing phase
+        if (room.phase === "playing") {
+          const q = room.questions[room.currentQ];
+          socket.emit("player:question", {
+            question: q.text,
+            answers: q.answers,
+            time: q.time,
+            index: room.currentQ,
+            total: room.questions.length,
+            lateJoin: true
+          });
+        }
+
+        console.log(`🆕 ${trimmed} late-joined room ${code} at Q${room.currentQ + 1}`);
+      }
+    }
+
+    // Update host with player list
     io.to(room.hostId).emit("host:player_joined", {
-      players: Object.values(room.players).map(p => p.name),
+      players: getConnectedPlayers(room).map(p => p.name),
     });
   });
 
@@ -153,13 +255,14 @@ io.on("connection", (socket) => {
 
     socket.emit("player:answer_result", { correct: isCorrect, points });
 
-    const answeredCount = Object.values(room.players).filter(p => p.answered).length;
+    const answeredCount = Object.values(room.players).filter(p => p.connected && p.answered).length;
+    const connectedCount = getConnectedPlayers(room).length;
     io.to(room.hostId).emit("host:answer_update", {
       answered: answeredCount,
-      total: Object.keys(room.players).length,
+      total: connectedCount,
     });
 
-    if (answeredCount === Object.keys(room.players).length) {
+    if (answeredCount === connectedCount) {
       clearTimeout(room.timer);
       showAnswerReveal(code);
     }
@@ -181,11 +284,25 @@ io.on("connection", (socket) => {
         io.to(code).emit("game:closed", "Host disconnected.");
         clearTimeout(room.timer);
         delete rooms[code];
-      } else {
-        delete room.players[socket.id];
-        io.to(room.hostId).emit("host:player_joined", {
-          players: Object.values(room.players).map(p => p.name),
+      } else if (room.players[socket.id]) {
+        // Mark player as disconnected instead of deleting (allows rejoin)
+        room.players[socket.id].connected = false;
+        console.log(`📴 ${room.players[socket.id].name} disconnected from room ${code}`);
+        
+        io.to(room.hostId).emit("host:player_left", {
+          name: room.players[socket.id].name,
+          players: getConnectedPlayers(room).map(p => p.name),
         });
+
+        // Check if all remaining connected players have answered
+        const connectedPlayers = getConnectedPlayers(room);
+        if (room.phase === "playing" && connectedPlayers.length > 0) {
+          const answeredCount = connectedPlayers.filter(p => p.answered).length;
+          if (answeredCount === connectedPlayers.length) {
+            clearTimeout(room.timer);
+            showAnswerReveal(code);
+          }
+        }
       }
     }
   });
@@ -207,8 +324,9 @@ function sendQuestion(code) {
     total: room.questions.length,
   });
 
-  Object.keys(room.players).forEach(pid => {
-    io.to(pid).emit("player:question", {
+  // Only send to connected players
+  getConnectedPlayers(room).forEach(player => {
+    io.to(player.socketId).emit("player:question", {
       question: q.text,
       answers: q.answers,
       time: q.time,

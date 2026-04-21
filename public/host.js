@@ -37,6 +37,18 @@ socket.on("host:player_joined", ({ players }) => {
   document.getElementById("start-btn").disabled = players.length < 1;
 });
 
+socket.on("host:player_left", ({ name, players }) => {
+  totalPlayers = players.length;
+  document.getElementById("player-count").textContent =
+    `${players.length} player${players.length !== 1 ? "s" : ""} connected`;
+
+  const chips = document.getElementById("player-chips");
+  chips.innerHTML = players.map(n => `<span class="chip">${n}</span>`).join("");
+  
+  // Brief notification that someone disconnected
+  console.log(`${name} disconnected (can rejoin)`);
+});
+
 function startGame() {
   socket.emit("host:start");
 }

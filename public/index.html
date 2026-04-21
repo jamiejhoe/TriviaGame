@@ -4,61 +4,67 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TriviaBlast – Host</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="screen-home" class="screen active">
-    <div class="logo">🎮 TriviaBlast</div>
-    <p class="tagline">Host a live trivia game</p>
-    <button class="btn btn-primary" onclick="createRoom()">Create Game</button>
-  </div>
-
-  <div id="screen-lobby" class="screen">
-    <div class="logo small">🎮 TriviaBlast</div>
-    <div class="join-code-box">
-      <p class="join-label">Join at <strong id="join-url"></strong></p>
-      <div class="join-code" id="join-code">----</div>
-      <p class="join-hint">Enter this code, or scan the QR to join instantly</p>
-      <img class="qr-code" id="qr-code" alt="Scan to join" />
+  <main class="app-container">
+    <div id="screen-home" class="screen active">
+      <div class="logo">TriviaBlast</div>
+      <p class="tagline">Host a live trivia game</p>
+      <button class="btn btn-primary" onclick="createRoom()">Create Game</button>
     </div>
-    <div class="player-count" id="player-count">Waiting for players...</div>
-    <div class="player-chips" id="player-chips"></div>
-    <button class="btn btn-primary" id="start-btn" onclick="startGame()" disabled>Start Game</button>
-  </div>
 
-  <div id="screen-question" class="screen">
-    <div class="game-header">
-      <div class="question-counter" id="q-counter">Q 1/10</div>
-      <div class="timer-wrap">
-        <svg class="timer-ring" viewBox="0 0 60 60">
-          <circle class="timer-bg" cx="30" cy="30" r="26"/>
-          <circle class="timer-progress" id="timer-circle" cx="30" cy="30" r="26"/>
-        </svg>
-        <span class="timer-text" id="timer-text">20</span>
+    <div id="screen-lobby" class="screen">
+      <div class="logo small">TriviaBlast</div>
+      <div class="join-code-box">
+        <p class="join-label">Join at <strong id="join-url"></strong></p>
+        <div class="join-code" id="join-code">----</div>
+        <p class="join-hint">Enter this code, or scan the QR to join instantly</p>
+        <img class="qr-code" id="qr-code" alt="Scan to join" />
       </div>
-      <div class="answer-tally" id="answer-tally">0 / 0 answered</div>
+      <div class="player-count" id="player-count">Waiting for players...</div>
+      <div class="player-chips" id="player-chips"></div>
+      <button class="btn btn-primary" id="start-btn" onclick="startGame()" disabled>Start Game</button>
     </div>
 
-    <div class="question-box">
-      <p id="q-text">Loading...</p>
+    <div id="screen-question" class="screen">
+      <div class="game-header">
+        <div class="question-counter" id="q-counter">Q 1/10</div>
+        <div class="timer-wrap">
+          <svg class="timer-ring" viewBox="0 0 60 60">
+            <circle class="timer-bg" cx="30" cy="30" r="26"/>
+            <circle class="timer-progress" id="timer-circle" cx="30" cy="30" r="26"/>
+          </svg>
+          <span class="timer-text" id="timer-text">20</span>
+        </div>
+        <div class="answer-tally" id="answer-tally">0 / 0 answered</div>
+      </div>
+
+      <div class="question-box">
+        <p id="q-text">Loading...</p>
+      </div>
+
+      <div class="answers-grid" id="answers-grid"></div>
     </div>
 
-    <div class="answers-grid" id="answers-grid"></div>
-  </div>
+    <div id="screen-reveal" class="screen">
+      <div class="reveal-title">📊 Leaderboard</div>
+      <div class="leaderboard" id="leaderboard"></div>
+      <button class="btn btn-primary" onclick="nextQuestion()">Next Question →</button>
+    </div>
 
-  <div id="screen-reveal" class="screen">
-    <div class="reveal-title">📊 Leaderboard</div>
-    <div class="leaderboard" id="leaderboard"></div>
-    <button class="btn btn-primary" onclick="nextQuestion()">Next Question →</button>
-  </div>
-
-  <div id="screen-end" class="screen">
-    <div class="results-title">🏆 Final Results!</div>
-    <div class="leaderboard" id="final-leaderboard"></div>
-    <button class="btn btn-primary" onclick="location.reload()">New Game</button>
-  </div>
+    <div id="screen-end" class="screen">
+      <div class="results-title">🏆 Final Results!</div>
+      <div class="leaderboard" id="final-leaderboard"></div>
+      <button class="btn btn-primary" onclick="location.reload()">New Game</button>
+    </div>
+  </main>
 
   <script src="/socket.io/socket.io.js"></script>
+  <script src="starfield.js"></script>
   <script src="host.js"></script>
 </body>
 </html>
