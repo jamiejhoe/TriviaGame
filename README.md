@@ -50,6 +50,8 @@ chmod +x deploy.sh
 ```
 
 Installs Node 20, PM2, dependencies, and starts the server.
+##
+Make sure you open port 3000 to public traffic on security group first
 
 ### 3. Restart with your public hostname
 

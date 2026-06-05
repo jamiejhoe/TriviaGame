@@ -27,16 +27,22 @@ const PUBLIC_HOST = process.env.PUBLIC_HOST || null;
 
 // ── Default Questions ──────────────────────────────────────────────────────
 const DEFAULT_QUESTIONS = [
-  { text: "What is the capital of France?", answers: ["Berlin", "Paris", "Madrid", "Rome"], correct: 1, time: 20 },
-  { text: "Which planet is known as the Red Planet?", answers: ["Venus", "Jupiter", "Mars", "Saturn"], correct: 2, time: 20 },
-  { text: "What is 12 × 12?", answers: ["124", "144", "132", "148"], correct: 1, time: 15 },
-  { text: "Who wrote 'Romeo and Juliet'?", answers: ["Charles Dickens", "Mark Twain", "William Shakespeare", "Jane Austen"], correct: 2, time: 20 },
-  { text: "What is the chemical symbol for water?", answers: ["O2", "CO2", "H2O", "HO"], correct: 2, time: 15 },
-  { text: "How many sides does a hexagon have?", answers: ["5", "7", "8", "6"], correct: 3, time: 15 },
-  { text: "Which ocean is the largest?", answers: ["Atlantic", "Indian", "Arctic", "Pacific"], correct: 3, time: 20 },
-  { text: "What year did World War II end?", answers: ["1943", "1944", "1945", "1946"], correct: 2, time: 20 },
-  { text: "What is the fastest land animal?", answers: ["Lion", "Cheetah", "Horse", "Leopard"], correct: 1, time: 20 },
-  { text: "Which language runs in a web browser?", answers: ["Python", "Java", "C++", "JavaScript"], correct: 3, time: 15 },
+  // Round 1: AWS Enterprise Support
+  { text: "What is the critical system response time SLA for AWS Enterprise Support customers?", answers: ["1 hour", "30 minutes", "15 minutes", "5 minutes"], correct: 2, time: 20 },
+  { text: "What is the name of the designated resource assigned to Enterprise Support customers who provides architectural guidance and Well-Architected Reviews?", answers: ["Cloud Solutions Architect", "Technical Account Manager (TAM)", "Support Operations Lead", "DevOps Consultant"], correct: 1, time: 20 },
+  { text: "Which security service is now included at no additional cost with AWS Enterprise Support?", answers: ["Amazon GuardDuty", "AWS Security Hub", "AWS Security Incident Response", "Amazon Inspector"], correct: 2, time: 20 },
+  // Round 2: Basic AWS Knowledge
+  { text: "What is the name of AWS's serverless compute service that runs code in response to events without provisioning servers?", answers: ["Amazon EC2", "AWS Fargate", "AWS Lambda", "Amazon ECS"], correct: 2, time: 20 },
+  { text: "How many products and services does AWS offer (approximately)?", answers: ["Over 50", "Over 100", "Over 200", "Over 500"], correct: 2, time: 20 },
+  { text: "Which of the following is NOT a pillar of the AWS Well-Architected Framework?", answers: ["Security", "Reliability", "Cost Optimization", "Availability"], correct: 3, time: 20 },
+  // Round 3: AWS DevOps Agent
+  { text: "AWS DevOps Agent is best described as your always-on, autonomous ___?", answers: ["Security Analyst", "Database Administrator", "On-call Engineer / SRE", "Network Architect"], correct: 2, time: 20 },
+  { text: "Which of the following is NOT one of the key areas that AWS DevOps Agent delivers recommendations for?", answers: ["Observability (monitoring, alerting, logging)", "Infrastructure optimization (autoscaling, capacity tuning)", "Deployment pipeline enhancement (testing, validation)", "Database schema design"], correct: 3, time: 25 },
+  // Round 4: Kiro
+  { text: "Kiro is an AI-powered IDE built by AWS. What development methodology does it introduce that transforms 'vibe coding' into production-ready applications?", answers: ["Test-driven development", "Specification-driven development", "Behavior-driven development", "Trunk-based development"], correct: 1, time: 20 },
+  { text: "Kiro is built on which AWS managed service for generative AI?", answers: ["Amazon SageMaker", "Amazon CodeWhisperer", "Amazon Bedrock", "Amazon Comprehend"], correct: 2, time: 20 },
+  // Bonus Tiebreaker
+  { text: "🏆 BONUS: AWS DevOps Agent reached General Availability in what month/year?", answers: ["January 2026", "March 2026", "June 2025", "December 2025"], correct: 1, time: 30 },
 ];
 
 // ── Room State ─────────────────────────────────────────────────────────────
