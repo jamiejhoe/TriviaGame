@@ -1,5 +1,7 @@
 const socket = io();
 let roomCode = null;
+let joinUrl = null;
+let qrDataUrl = null;
 let timerInterval = null;
 let totalPlayers = 0;
 
@@ -12,15 +14,16 @@ function createRoom() {
   socket.emit("host:create");
 }
 
-socket.on("host:created", ({ code, joinUrl, qrDataUrl }) => {
+socket.on("host:created", ({ code, joinUrl: url, qrDataUrl: qr }) => {
   roomCode = code;
+  joinUrl = url;
+  qrDataUrl = qr;
   document.getElementById("join-code").textContent = code;
-  // Show the LAN URL from the server (strips protocol for cleaner display)
-  const displayUrl = joinUrl ? joinUrl.replace(/^https?:\/\//, "").split("/")[0] : window.location.host;
+  const displayUrl = url ? url.replace(/^https?:\/\//, "").split("/")[0] : window.location.host;
   document.getElementById("join-url").textContent = displayUrl;
-  if (qrDataUrl) {
+  if (qr) {
     const img = document.getElementById("qr-code");
-    img.src = qrDataUrl;
+    img.src = qr;
     img.style.display = "block";
   }
   showScreen("screen-lobby");
@@ -51,6 +54,26 @@ socket.on("host:player_left", ({ name, players }) => {
 
 function startGame() {
   socket.emit("host:start");
+  // Show the floating join info button once the game begins
+  document.getElementById("show-join-btn").classList.remove("hidden");
+}
+
+function openJoinModal() {
+  const modal = document.getElementById("join-modal");
+  document.getElementById("modal-join-code").textContent = roomCode;
+  const displayUrl = joinUrl ? joinUrl.replace(/^https?:\/\//, "").split("/")[0] : window.location.host;
+  document.getElementById("modal-join-url").textContent = displayUrl;
+  if (qrDataUrl) {
+    const img = document.getElementById("modal-qr-code");
+    img.src = qrDataUrl;
+    img.style.display = "block";
+  }
+  modal.classList.remove("hidden");
+}
+
+function closeJoinModal(event) {
+  if (event && event.target !== event.currentTarget && !event.target.classList.contains("join-modal-close")) return;
+  document.getElementById("join-modal").classList.add("hidden");
 }
 
 socket.on("host:question", ({ question, answers, correct, time, index, total }) => {

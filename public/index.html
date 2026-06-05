@@ -12,13 +12,12 @@
 <body>
   <main class="app-container">
     <div id="screen-home" class="screen active">
-      <div class="logo">TriviaBlast</div>
-      <p class="tagline">Host a live trivia game</p>
-      <button class="btn btn-primary" onclick="createRoom()">Create Game</button>
+      <div class="logo">Trivia Time!</div>
+      <button class="btn btn-primary" onclick="createRoom()">Start Game</button>
     </div>
 
     <div id="screen-lobby" class="screen">
-      <div class="logo small">TriviaBlast</div>
+      <div class="logo small">Trivia Time!</div>
       <div class="join-code-box">
         <p class="join-label">Join at <strong id="join-url"></strong></p>
         <div class="join-code" id="join-code">----</div>
@@ -62,6 +61,20 @@
       <button class="btn btn-primary" onclick="location.reload()">New Game</button>
     </div>
   </main>
+
+  <!-- Join Info Modal (accessible from any game screen) -->
+  <div id="join-modal" class="join-modal hidden" onclick="closeJoinModal(event)">
+    <div class="join-modal-content">
+      <button class="join-modal-close" onclick="closeJoinModal()">&times;</button>
+      <p class="join-label">Join at <strong id="modal-join-url"></strong></p>
+      <div class="join-code" id="modal-join-code">----</div>
+      <img class="qr-code" id="modal-qr-code" alt="Scan to join" style="display:block" />
+      <p class="join-hint">Enter the code or scan QR to rejoin</p>
+    </div>
+  </div>
+
+  <!-- Floating button to show join info (hidden until game starts) -->
+  <button id="show-join-btn" class="btn-join-info hidden" onclick="openJoinModal()">📲 Join Info</button>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="starfield.js"></script>
