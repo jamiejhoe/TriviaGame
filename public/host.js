@@ -54,8 +54,10 @@ socket.on("host:player_left", ({ name, players }) => {
 
 function startGame() {
   socket.emit("host:start");
-  // Show the floating join info button once the game begins
-  document.getElementById("show-join-btn").classList.remove("hidden");
+  // Show the floating join info button with the room code
+  const joinBtn = document.getElementById("show-join-btn");
+  joinBtn.textContent = `📲 ${roomCode}`;
+  joinBtn.classList.remove("hidden");
 }
 
 function openJoinModal() {

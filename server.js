@@ -28,18 +28,18 @@ const PUBLIC_HOST = process.env.PUBLIC_HOST || null;
 // ── Default Questions ──────────────────────────────────────────────────────
 const DEFAULT_QUESTIONS = [
   // Round 1: AWS Enterprise Support
-  { text: "What is the critical system response time SLA for AWS Enterprise Support customers?", answers: ["1 hour", "30 minutes", "15 minutes", "5 minutes"], correct: 2, time: 20 },
-  { text: "What is the name of the designated resource assigned to Enterprise Support customers who provides architectural guidance and Well-Architected Reviews?", answers: ["Cloud Solutions Architect", "Technical Account Manager (TAM)", "Support Operations Lead", "DevOps Consultant"], correct: 1, time: 20 },
+  { text: "What is the name of the designated resource assigned to Enterprise Support customers who provides architectural guidance and AWS best practices?", answers: ["AWS Best Friend", "Technical Account Manager (TAM)", "Satisfaction Management Lead", "Chief Vibes Officer"], correct: 1, time: 20 },
+  { text: "What type of review does your TAM conduct to evaluate your cloud architecture against AWS best practices?", answers: ["Talent Review", "Well-Architected Review", "Code Review", "Product Review"], correct: 1, time: 20 },
   { text: "Which security service is now included at no additional cost with AWS Enterprise Support?", answers: ["Amazon GuardDuty", "AWS Security Hub", "AWS Security Incident Response", "Amazon Inspector"], correct: 2, time: 20 },
   // Round 2: Basic AWS Knowledge
-  { text: "What is the name of AWS's serverless compute service that runs code in response to events without provisioning servers?", answers: ["Amazon EC2", "AWS Fargate", "AWS Lambda", "Amazon ECS"], correct: 2, time: 20 },
-  { text: "How many products and services does AWS offer (approximately)?", answers: ["Over 50", "Over 100", "Over 200", "Over 500"], correct: 2, time: 20 },
-  { text: "Which of the following is NOT a pillar of the AWS Well-Architected Framework?", answers: ["Security", "Reliability", "Cost Optimization", "Availability"], correct: 3, time: 20 },
+  { text: "Enterprise Support customers get full access to which AWS tool that provides real-time recommendations regarding AWS best practices?", answers: ["Trusted Advisor", "Crystal Ball", "Amazon Forecase", "Magic 8-Ball"], correct: 0, time: 20 },
+  { text: "Which is the closest to the number of services AWS offers?", answers: ["Over 5", "Over 100", "Over 200", "Over 5000"], correct: 2, time: 20 },
+  { text: "Which of the following is NOT a pillar of the AWS Well-Architected Framework?", answers: ["Security", "Reliability", "Cost Optimization", "Operational Awesomeness"], correct: 3, time: 20 },
   // Round 3: AWS DevOps Agent
   { text: "AWS DevOps Agent is best described as your always-on, autonomous ___?", answers: ["Security Analyst", "Database Administrator", "On-call Engineer / SRE", "Network Architect"], correct: 2, time: 20 },
-  { text: "Which of the following is NOT one of the key areas that AWS DevOps Agent delivers recommendations for?", answers: ["Observability (monitoring, alerting, logging)", "Infrastructure optimization (autoscaling, capacity tuning)", "Deployment pipeline enhancement (testing, validation)", "Database schema design"], correct: 3, time: 25 },
+  { text: "Which of the following is NOT one of the key areas that AWS DevOps Agent delivers recommendations for?", answers: ["Observability (monitoring, alerting, logging)", "Infrastructure optimization (autoscaling, capacity tuning)", "Deployment pipeline enhancement (testing, validation)", "Office snack inventory management"], correct: 3, time: 25 },
   // Round 4: Kiro
-  { text: "Kiro is an AI-powered IDE built by AWS. What development methodology does it introduce that transforms 'vibe coding' into production-ready applications?", answers: ["Test-driven development", "Specification-driven development", "Behavior-driven development", "Trunk-based development"], correct: 1, time: 20 },
+  { text: "Kiro is an AI-powered IDE built by AWS. What development methodology does it introduce that transforms 'vibe coding' into production-ready applications?", answers: ["Test-driven development", "Spec-driven development", "Behavior-driven development", "Vibes-based development"], correct: 1, time: 20 },
   { text: "Kiro is built on which AWS managed service for generative AI?", answers: ["Amazon SageMaker", "Amazon CodeWhisperer", "Amazon Bedrock", "Amazon Comprehend"], correct: 2, time: 20 },
   // Bonus Tiebreaker
   { text: "🏆 BONUS: AWS DevOps Agent reached General Availability in what month/year?", answers: ["January 2026", "March 2026", "June 2025", "December 2025"], correct: 1, time: 30 },
