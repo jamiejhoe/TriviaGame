@@ -32,7 +32,7 @@ const DEFAULT_QUESTIONS = [
   { text: "What type of review does your TAM conduct to evaluate your cloud architecture against AWS best practices?", answers: ["Talent Review", "Well-Architected Review", "Code Review", "Product Review"], correct: 1, time: 20 },
   { text: "Which security service is now included at no additional cost with AWS Enterprise Support?", answers: ["Amazon GuardDuty", "AWS Security Hub", "AWS Security Incident Response", "Amazon Inspector"], correct: 2, time: 20 },
   // Round 2: Basic AWS Knowledge
-  { text: "Enterprise Support customers get full access to which AWS tool that provides real-time recommendations regarding AWS best practices?", answers: ["Trusted Advisor", "Crystal Ball", "Amazon Forecase", "Magic 8-Ball"], correct: 0, time: 20 },
+  { text: "Enterprise Support customers get full access to which AWS tool that provides real-time recommendations regarding AWS best practices?", answers: ["Trusted Advisor", "Crystal Ball", "Amazon Forecast", "Magic 8-Ball"], correct: 0, time: 20 },
   { text: "Which is the closest to the number of services AWS offers?", answers: ["Over 5", "Over 100", "Over 200", "Over 5000"], correct: 2, time: 20 },
   { text: "Which of the following is NOT a pillar of the AWS Well-Architected Framework?", answers: ["Security", "Reliability", "Cost Optimization", "Operational Awesomeness"], correct: 3, time: 20 },
   // Round 3: AWS DevOps Agent
@@ -151,13 +151,16 @@ io.on("connection", (socket) => {
       // If game is in progress, send current question state
       if (room.phase === "playing" && !player.answered) {
         const q = room.questions[room.currentQ];
+        const elapsed = Math.floor((Date.now() - room.questionStartedAt) / 1000);
+        const timeRemaining = Math.max(0, q.time - elapsed);
         socket.emit("player:question", {
           question: q.text,
           answers: q.answers,
           time: q.time,
+          timeRemaining,
           index: room.currentQ,
           total: room.questions.length,
-          lateJoin: true // Signal reduced time
+          lateJoin: true
         });
       } else if (room.phase === "playing" && player.answered) {
         socket.emit("player:wait_for_next", { message: "You already answered this question. Waiting for results..." });
@@ -204,10 +207,13 @@ io.on("connection", (socket) => {
         // Send current question if in playing phase
         if (room.phase === "playing") {
           const q = room.questions[room.currentQ];
+          const elapsed = Math.floor((Date.now() - room.questionStartedAt) / 1000);
+          const timeRemaining = Math.max(0, q.time - elapsed);
           socket.emit("player:question", {
             question: q.text,
             answers: q.answers,
             time: q.time,
+            timeRemaining,
             index: room.currentQ,
             total: room.questions.length,
             lateJoin: true
@@ -320,6 +326,8 @@ function sendQuestion(code) {
   const q = room.questions[room.currentQ];
 
   Object.values(room.players).forEach(p => { p.answered = false; p.timeLeft = q.time; });
+
+  room.questionStartedAt = Date.now();
 
   io.to(room.hostId).emit("host:question", {
     question: q.text,

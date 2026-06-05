@@ -69,7 +69,7 @@ socket.on("player:wait_for_next", ({ message }) => {
 
 socket.on("player:error", (msg) => showError(msg));
 
-socket.on("player:question", ({ question, answers, time }) => {
+socket.on("player:question", ({ question, answers, time, timeRemaining }) => {
   document.getElementById("p-question-text").textContent = question;
   document.getElementById("p-score").textContent = score;
 
@@ -83,10 +83,12 @@ socket.on("player:question", ({ question, answers, time }) => {
   ).join("");
 
   showScreen("screen-question");
-  startTimer(time);
+  // Use timeRemaining if provided (rejoin/late join), otherwise full time
+  startTimer(timeRemaining != null ? timeRemaining : time, time);
 });
 
-function startTimer(seconds) {
+function startTimer(seconds, totalTime) {
+  if (!totalTime) totalTime = seconds;
   clearInterval(timerInterval);
   let timeLeft = seconds;
   const circle = document.getElementById("p-timer-circle");
@@ -95,7 +97,7 @@ function startTimer(seconds) {
   function tick() {
     socket.emit("player:tick", { timeLeft });
     document.getElementById("p-timer-text").textContent = timeLeft;
-    const progress = timeLeft / seconds;
+    const progress = timeLeft / totalTime;
     circle.style.strokeDashoffset = circumference * (1 - progress);
     circle.style.stroke = progress > 0.5 ? "#fff" : progress > 0.25 ? "#ffd700" : "#ff3355";
     if (timeLeft <= 0) clearInterval(timerInterval);
