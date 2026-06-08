@@ -234,6 +234,11 @@ io.on("connection", (socket) => {
     const code = getHostRoom(socket.id);
     if (!code) return;
     const room = rooms[code];
+    room.phase = "playing";
+    room.currentQ = 0;
+    sendQuestion(code);
+  });
+
   socket.on("host:next", () => {
     const code = getHostRoom(socket.id);
     if (!code) return;
@@ -299,11 +304,6 @@ io.on("connection", (socket) => {
 
     io.to(code).emit("poll:results", { question: POLL_QUESTION.text, results });
     room.phase = "ended";
-  });f (room.currentQ >= room.questions.length) {
-      endGame(code);
-    } else {
-      sendQuestion(code);
-    }
   });
 
   socket.on("player:answer", ({ answerIndex }) => {
