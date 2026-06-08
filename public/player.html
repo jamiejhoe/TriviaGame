@@ -70,7 +70,23 @@
     <div id="screen-end" class="screen">
       <div class="results-title">🏆 Game Over!</div>
       <div class="leaderboard" id="p-final-leaderboard"></div>
-      <button class="btn btn-primary" onclick="location.reload()">Play Again</button>
+      <div class="waiting-msg">Poll coming up...</div>
+    </div>
+
+    <div id="screen-poll" class="screen">
+      <div class="reveal-title">🗳️ <span id="p-poll-question">Vote!</span></div>
+      <div class="answers-grid poll-grid" id="p-poll-grid"></div>
+    </div>
+
+    <div id="screen-poll-voted" class="screen">
+      <div class="feedback-icon">🗳️</div>
+      <div class="feedback-msg">Vote submitted!</div>
+      <div class="waiting-msg">Waiting for results...</div>
+    </div>
+
+    <div id="screen-poll-results" class="screen">
+      <div class="reveal-title">🗳️ Poll Results</div>
+      <div class="poll-results" id="p-poll-results"></div>
     </div>
   </main>
 

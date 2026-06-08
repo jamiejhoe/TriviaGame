@@ -34,12 +34,17 @@ const DEFAULT_QUESTIONS = [
   { text: "AWS DevOps Agent is best described as your always-on, autonomous ___?", answers: ["Security Analyst", "Database Administrator", "On-call Engineer / SRE", "Network Architect"], correct: 2, time: 20 },
   { text: "Which of the following is NOT one of the key areas that AWS DevOps Agent delivers recommendations for?", answers: ["Observability (monitoring, alerting, logging)", "Infrastructure optimization (autoscaling, capacity tuning)", "Deployment pipeline enhancement (testing, validation)", "Office snack inventory management"], correct: 3, time: 25 },
   // Kiro
-  { text: "Kiro is an AI-powered IDE built by AWS. What development methodology does it introduce that transforms 'vibe coding' into production-ready applications?", answers: ["Test-driven development", "Spec-driven development", "Behavior-driven development", "Vibes-based development"], correct: 1, time: 20 },
+  { text: "What development methodology does Kiro introduce that transforms 'vibe coding' into production-ready applications?", answers: ["Test-driven development", "Spec-driven development", "Behavior-driven development", "Vibes-based development"], correct: 1, time: 20 },
   { text: "Kiro is built on which AWS managed service for generative AI?", answers: ["Amazon SageMaker", "Amazon CodeWhisperer", "Amazon Bedrock", "Amazon Comprehend"], correct: 2, time: 20 },
   // AWS Security Agent
-  { text: "🏆 BONUS: AWS DevOps Agent reached General Availability in what month/year?", answers: ["January 2026", "March 2026", "June 2025", "December 2025"], correct: 1, time: 30 },
+  { text: "AWS Security Agent operates like a human ___. What role does it mimic??", answers: ["Security Guard", "Password manager", "Firewall administrator", "Penetration Tester"], correct: 3, time: 30 },
+  { text: "What does AWS Security Agent do when it finds a potential vulnerability?", answers: ["Sends a strongly worded email", "Validates it by attempting to exploit it with targeted payloads", "Immediately shuts down the application", "Files a JIRA ticket and hopes for the best"], correct: 1, time: 30 },
 ];
-
+// ── Poll Configuration ─────────────────────────────────────────────────────
+const POLL_QUESTION = {
+  text: "Best Customer Presentation",
+  options: ["Answer 1", "Answer 2", "Answer 3", "Answer 4", "Answer 5", "Answer 6"],
+};
 // ── Room State ─────────────────────────────────────────────────────────────
 const rooms = {};
 
@@ -229,17 +234,72 @@ io.on("connection", (socket) => {
     const code = getHostRoom(socket.id);
     if (!code) return;
     const room = rooms[code];
-    room.phase = "playing";
-    room.currentQ = 0;
-    sendQuestion(code);
-  });
-
   socket.on("host:next", () => {
     const code = getHostRoom(socket.id);
     if (!code) return;
     const room = rooms[code];
     room.currentQ++;
     if (room.currentQ >= room.questions.length) {
+      endGame(code);
+    } else {
+      sendQuestion(code);
+    }
+  });
+
+  // ── Poll Events ──────────────────────────────────────────────────────────
+  socket.on("host:start_poll", () => {
+    const code = getHostRoom(socket.id);
+    if (!code) return;
+    const room = rooms[code];
+    room.phase = "poll";
+    room.pollVotes = new Array(POLL_QUESTION.options.length).fill(0);
+    room.pollVoters = new Set();
+
+    io.to(room.hostId).emit("host:poll", {
+      question: POLL_QUESTION.text,
+      options: POLL_QUESTION.options,
+    });
+
+    getConnectedPlayers(room).forEach(player => {
+      io.to(player.socketId).emit("player:poll", {
+        question: POLL_QUESTION.text,
+        options: POLL_QUESTION.options,
+      });
+    });
+  });
+
+  socket.on("player:poll_vote", ({ optionIndex }) => {
+    const code = socket.data.code;
+    const room = rooms[code];
+    if (!room || room.phase !== "poll") return;
+    if (room.pollVoters.has(socket.id)) return; // already voted
+
+    room.pollVoters.add(socket.id);
+    room.pollVotes[optionIndex]++;
+
+    socket.emit("player:poll_voted", { choice: optionIndex });
+
+    // Update host with vote count
+    io.to(room.hostId).emit("host:poll_update", {
+      voted: room.pollVoters.size,
+      total: getConnectedPlayers(room).length,
+    });
+  });
+
+  socket.on("host:reveal_poll", () => {
+    const code = getHostRoom(socket.id);
+    if (!code) return;
+    const room = rooms[code];
+    if (!room || room.phase !== "poll") return;
+
+    const results = POLL_QUESTION.options.map((opt, i) => ({
+      option: opt,
+      votes: room.pollVotes[i],
+    }));
+
+    io.to(code).emit("poll:results", { question: POLL_QUESTION.text, results });
+    room.phase = "ended";
+  });f (room.currentQ >= room.questions.length) {
       endGame(code);
     } else {
       sendQuestion(code);
