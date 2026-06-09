@@ -12,9 +12,25 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname, "public")));
 
 // Serve survey QR code as a static image
+const SURVEY_URL = "https://pulse.aws/survey/9XG23Z1F?p=0";
+let surveyClicks = 0;
+
+app.get("/survey", (req, res) => {
+  surveyClicks++;
+  console.log(`📋 Survey click #${surveyClicks}`);
+  res.redirect(SURVEY_URL);
+});
+
+app.get("/survey-count", (req, res) => {
+  res.json({ clicks: surveyClicks });
+});
+
 app.get("/survey-qr.png", async (req, res) => {
   try {
-    const buf = await QRCode.toBuffer("https://pulse.aws/survey/9XG23Z1F?p=0", {
+    const proto = req.headers["x-forwarded-proto"] || "http";
+    const host = PUBLIC_HOST || req.headers.host || `${LAN_IP}:${PORT}`;
+    const surveyRedirectUrl = `${proto}://${host}/survey`;
+    const buf = await QRCode.toBuffer(surveyRedirectUrl, {
       width: 280,
       margin: 1,
       color: { dark: "#000000", light: "#ffffff" },
