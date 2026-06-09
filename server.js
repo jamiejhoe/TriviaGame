@@ -22,7 +22,28 @@ app.get("/survey", (req, res) => {
 });
 
 app.get("/survey-count", (req, res) => {
-  res.json({ clicks: surveyClicks });
+  res.send(`<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Survey Clicks</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:#0a0a0f; font-family:'Orbitron',sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at top,#1a1a2e 0%,transparent 50%); }
+  .card { text-align:center; background:#12121a; border:1px solid #ffffff15;
+    border-radius:16px; padding:48px 64px; box-shadow:0 0 40px #a855f740; }
+  .label { font-size:1rem; color:#a1a1aa; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  .count { font-size:6rem; font-weight:900; color:#a855f7;
+    text-shadow:0 0 20px #a855f7,0 0 40px #a855f780,0 0 60px #a855f740; }
+  .sub { margin-top:16px; font-size:.85rem; color:#a1a1aa; font-family:system-ui,sans-serif; }
+</style></head><body>
+<div class="card">
+  <div class="label">Survey Scans</div>
+  <div class="count">${surveyClicks}</div>
+  <div class="sub">Auto-refreshes every 5s</div>
+</div>
+<script>setTimeout(()=>location.reload(),5000)</script>
+</body></html>`);
 });
 
 app.get("/survey-qr.png", async (req, res) => {
