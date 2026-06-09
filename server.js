@@ -43,7 +43,7 @@ const DEFAULT_QUESTIONS = [
 // ── Poll Configuration ─────────────────────────────────────────────────────
 const POLL_QUESTION = {
   text: "Best Customer Presentation",
-  options: ["Answer 1", "Answer 2", "Answer 3", "Answer 4", "Answer 5", "Answer 6"],
+  options: ["Stretto - How Stretto Built Award-Winning Legal AI on AWS Bedrock", "AdRoll - Operational Wins with DevOps Agent", "Delta Air Lines - Deploy Faster, Stress Less: Lambda Adoption at Enterprise Scale", "iBusiness - Reimagining Small-Business Lending with Composable AI", "DarkMatter - Faster to Close: AI-Powered Mortgage Origination", "RootMetrics - Multi-Region QuickSight Dashboard Unification with Gen AI"],
 };
 // ── Room State ─────────────────────────────────────────────────────────────
 const rooms = {};
