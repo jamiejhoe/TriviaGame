@@ -411,3 +411,16 @@ body {
 @media (max-width: 520px) {
   .poll-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ── Survey Link ────────────────────────────────────────────────────────── */
+.survey-link {
+  display: inline-block;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: underline;
+  word-break: break-all;
+  margin: 8px 0;
+}
+.survey-link:hover { color: var(--purple); }

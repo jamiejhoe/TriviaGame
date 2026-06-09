@@ -11,6 +11,20 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serve survey QR code as a static image
+app.get("/survey-qr.png", async (req, res) => {
+  try {
+    const buf = await QRCode.toBuffer("https://pulse.aws/survey/9XG23Z1F?p=0", {
+      width: 280,
+      margin: 1,
+      color: { dark: "#000000", light: "#ffffff" },
+    });
+    res.type("image/png").send(buf);
+  } catch (err) {
+    res.status(500).send("QR generation failed");
+  }
+});
+
 // Find the machine's LAN IP (e.g. 192.168.x.x) so phones on the same Wi-Fi can connect.
 // On EC2, set PUBLIC_HOST env var to override (e.g. PUBLIC_HOST=ec2-1-2-3-4.compute.amazonaws.com)
 function getLanIp() {
