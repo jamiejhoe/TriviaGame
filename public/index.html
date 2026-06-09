@@ -66,11 +66,13 @@
       <div class="poll-tally" id="poll-tally">0 / 0 voted</div>
       <div class="answers-grid poll-grid" id="poll-options-grid"></div>
       <button class="btn btn-primary" onclick="revealPoll()">Reveal Results</button>
+      <button class="btn btn-secondary" onclick="showScreen('screen-end')">← Back to Leaderboard</button>
     </div>
 
     <div id="screen-poll-results" class="screen">
       <div class="reveal-title">🗳️ Poll Results</div>
       <div class="poll-results" id="poll-results"></div>
+      <button class="btn btn-secondary" onclick="showScreen('screen-end')">← Back to Leaderboard</button>
       <button class="btn btn-primary" onclick="location.reload()">New Game</button>
     </div>
   </main>

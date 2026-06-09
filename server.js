@@ -28,22 +28,19 @@ const PUBLIC_HOST = process.env.PUBLIC_HOST || null;
 // ── Default Questions ──────────────────────────────────────────────────────
 const DEFAULT_QUESTIONS = [
   // AWS Enterprise Support
-  { text: "What is the name of the designated resource assigned to Enterprise Support customers who provides architectural guidance and AWS best practices?", answers: ["AWS Best Friend", "Technical Account Manager (TAM)", "Satisfaction Management Lead", "Chief Vibes Officer"], correct: 1, time: 20 },
   { text: "Which security service is now included at no additional cost with AWS Enterprise Support?", answers: ["Amazon GuardDuty", "AWS Security Hub", "AWS Security Incident Response", "Amazon Inspector"], correct: 2, time: 20 },
   // AWS DevOps Agent
   { text: "AWS DevOps Agent is best described as your always-on, autonomous ___?", answers: ["Security Analyst", "Database Administrator", "On-call Engineer / SRE", "Network Architect"], correct: 2, time: 20 },
   { text: "Which of the following is NOT one of the key areas that AWS DevOps Agent delivers recommendations for?", answers: ["Observability (monitoring, alerting, logging)", "Infrastructure optimization (autoscaling, capacity tuning)", "Deployment pipeline enhancement (testing, validation)", "Office snack inventory management"], correct: 3, time: 25 },
   // Kiro
   { text: "What development methodology does Kiro introduce that transforms 'vibe coding' into production-ready applications?", answers: ["Test-driven development", "Spec-driven development", "Behavior-driven development", "Vibes-based development"], correct: 1, time: 20 },
-  { text: "Kiro is built on which AWS managed service for generative AI?", answers: ["Amazon SageMaker", "Amazon CodeWhisperer", "Amazon Bedrock", "Amazon Comprehend"], correct: 2, time: 20 },
   // AWS Security Agent
-  { text: "AWS Security Agent operates like a human ___. What role does it mimic??", answers: ["Security Guard", "Password manager", "Firewall administrator", "Penetration Tester"], correct: 3, time: 30 },
-  { text: "What does AWS Security Agent do when it finds a potential vulnerability?", answers: ["Sends a strongly worded email", "Validates it by attempting to exploit it with targeted payloads", "Immediately shuts down the application", "Files a JIRA ticket and hopes for the best"], correct: 1, time: 30 },
+  { text: "AWS Security Agent operates like a human ___.", answers: ["Security Guard", "Password manager", "Firewall administrator", "Penetration Tester"], correct: 3, time: 30 },
 ];
 // ── Poll Configuration ─────────────────────────────────────────────────────
 const POLL_QUESTION = {
   text: "Best Customer Presentation",
-  options: ["Stretto - How Stretto Built Award-Winning Legal AI on AWS Bedrock", "AdRoll - Operational Wins with DevOps Agent", "Delta Air Lines - Deploy Faster, Stress Less: Lambda Adoption at Enterprise Scale", "iBusiness - Reimagining Small-Business Lending with Composable AI", "DarkMatter - Faster to Close: AI-Powered Mortgage Origination", "RootMetrics - Multi-Region QuickSight Dashboard Unification with Gen AI"],
+  options: ["Stretto - Building a Production-Scale, Domain-Specific GenAI Platform for Regulated Legal Workflows on AWS​", "AdRoll - Operational Wins with DevOps Agent", "Delta Air Lines - Deploy Faster, Stress Less: Lambda Adoption at Enterprise Scale", "iBusiness - Reimagining Small-Business Lending with Composable AI", "DarkMatter - Reimagining Mortgage Origination with AI", "RootMetrics - From Legacy to Amazon Quick"],
 };
 // ── Room State ─────────────────────────────────────────────────────────────
 const rooms = {};
