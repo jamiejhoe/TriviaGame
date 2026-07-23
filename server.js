@@ -82,9 +82,9 @@ const DEFAULT_QUESTIONS = [
   { text: "Which security service is now included at no additional cost with AWS Enterprise Support?", answers: ["Amazon GuardDuty", "AWS Security Hub", "AWS Security Incident Response", "Amazon Inspector"], correct: 2, time: 20 },
   // AWS DevOps Agent
   { text: "AWS DevOps Agent is best described as your always-on, autonomous ___?", answers: ["Security Analyst", "Database Administrator", "On-call Engineer / SRE", "Network Architect"], correct: 2, time: 20 },
-  { text: "Which of the following is NOT one of the key areas that AWS DevOps Agent delivers recommendations for?", answers: ["Observability (monitoring, alerting, logging)", "Infrastructure optimization (autoscaling, capacity tuning)", "Deployment pipeline enhancement (testing, validation)", "Office snack inventory management"], correct: 3, time: 25 },
+  { text: "Which of the following is NOT one of the key areas that AWS DevOps Agent delivers recommendations for?", answers: ["Observability (monitoring, alerting, logging)", "Infrastructure optimization (autoscaling, capacity tuning)", "Deployment pipeline enhancement (testing, validation)", "Office snack inventory management"], correct: 3, time: 20 },
   // AWS Security Agent
-  { text: "AWS Security Agent operates like a human ___.", answers: ["Security Guard", "Password manager", "Firewall administrator", "Penetration Tester"], correct: 3, time: 30 },
+  { text: "AWS Security Agent operates like a human ___.", answers: ["Security Guard", "Password manager", "Firewall administrator", "Penetration Tester"], correct: 3, time: 20 },
   // AWS Incident Detection and Response
   { text: "AWS Incident Detection and Response (IDR) monitors your critical workloads and provides proactive engagement ___.", answers: ["During business hours only (9–5)", "Only when you submit a support case", "24/7 with custom runbooks and response plans", "Once a quarter during your business review"], correct: 2, time: 20 },
 ];
