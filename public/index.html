@@ -15,7 +15,7 @@
       <div class="logo">Trivia Time!</div>
       <div class="join-code-box">
         <p class="join-label">📋 Please fill out this survey first:</p>
-        <a href="/survey" target="_blank" class="survey-link">pulse.aws/survey/9XG23Z1F</a>
+        <a href="/survey" target="_blank" class="survey-link">pulse.amazon/survey/L9KVDPA7</a>
         <img class="qr-code" id="survey-qr" src="/survey-qr.png" alt="Scan to open survey" style="display:block" />
       </div>
       <button class="btn btn-primary" onclick="createRoom()">Start Game</button>
@@ -52,6 +52,8 @@
       </div>
 
       <div class="answers-grid" id="answers-grid"></div>
+
+      <button class="btn btn-primary hidden" id="show-lb-btn" onclick="showLeaderboard()">Show Leaderboard →</button>
     </div>
 
     <div id="screen-reveal" class="screen">

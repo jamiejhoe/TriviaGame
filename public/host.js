@@ -83,6 +83,9 @@ socket.on("host:question", ({ question, answers, correct, time, index, total }) 
   document.getElementById("q-text").textContent = question;
   document.getElementById("answer-tally").textContent = `0 / ${totalPlayers} answered`;
 
+  // Reset the leaderboard button for the new question
+  document.getElementById("show-lb-btn").classList.add("hidden");
+
   const grid = document.getElementById("answers-grid");
   const shapes = ["▲", "◆", "●", "■"];
   const colors = ["color-0", "color-1", "color-2", "color-3"];
@@ -118,6 +121,8 @@ function startTimer(seconds) {
   timerInterval = setInterval(tick, 1000);
 }
 
+let pendingLeaderboard = [];
+
 socket.on("game:reveal", ({ correct, leaderboard }) => {
   clearInterval(timerInterval);
 
@@ -127,11 +132,16 @@ socket.on("game:reveal", ({ correct, leaderboard }) => {
     else btn.classList.add("wrong");
   });
 
-  setTimeout(() => {
-    renderLeaderboard("leaderboard", leaderboard);
-    showScreen("screen-reveal");
-  }, 2000);
+  // Wait for the host to press the button before showing the leaderboard
+  pendingLeaderboard = leaderboard;
+  document.getElementById("show-lb-btn").classList.remove("hidden");
 });
+
+function showLeaderboard() {
+  document.getElementById("show-lb-btn").classList.add("hidden");
+  renderLeaderboard("leaderboard", pendingLeaderboard);
+  showScreen("screen-reveal");
+}
 
 function nextQuestion() {
   socket.emit("host:next");
